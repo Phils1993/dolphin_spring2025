@@ -5,25 +5,34 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+@Builder
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
-@Entity
 @EqualsAndHashCode
-public class Fee
-{
+
+public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
-    private int amount;
-    private LocalDate payDate;
+    private int id;
+
+    @Column(nullable = false, length = 255)
+    private String note;
+
+    private LocalDate createdDate;
+
+    private String createdBy;
 
     @ManyToOne
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Person person;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdDate = LocalDate.now();
+    }
 }

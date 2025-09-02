@@ -13,6 +13,7 @@ import lombok.*;
 @Builder
 @ToString
 @Entity
+@EqualsAndHashCode
 public class PersonDetail
 {
     @Id
