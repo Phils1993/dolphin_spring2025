@@ -26,12 +26,12 @@ public class Person {
 
     // Relationer 1:m
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @Builder.Default  // <---- This one is necessary with @Builder
     private Set<Fee> fees = new HashSet<>();
 
     // Relationer m:1
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Builder.Default
     private Set<Note> notes = new HashSet<>();
 

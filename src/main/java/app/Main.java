@@ -1,6 +1,7 @@
 package app;
 
 import app.config.HibernateConfig;
+import app.daos.DolphinDAO;
 import app.entities.Fee;
 import app.entities.Note;
 import app.entities.Person;
@@ -9,14 +10,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello Dolphin!");
 
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
-        try(EntityManager em = emf.createEntityManager())
-        {
+        DolphinDAO dolphinDAO = new DolphinDAO(emf);
+
+
+        try (EntityManager em = emf.createEntityManager()) {
             Person p1 = Person.builder()
                     .name("Hanzi")
                     .build();
@@ -41,10 +45,23 @@ public class Main {
             p1.addNote(n1);
             p1.addNote(n2);
 
-            em.getTransaction().begin();
-            em.persist(p1);
-            em.getTransaction().commit();
-            System.out.println(p1.toString());
+            Person newPerson = dolphinDAO.create(p1);
+            //System.out.println(newPerson.toString());
+
+            System.out.println("All members:");
+            List<Person> persons = dolphinDAO.getAll();
+            persons.forEach(System.out::println);
+
+            System.out.println("Updated members:");
+            Person updatedPerson = Person.builder()
+                    .name("Philip")
+                    .personDetail(newPerson.getPersonDetail())
+                    .notes(newPerson.getNotes())
+                    .build();
+            Person personToUpdate = dolphinDAO.update(updatedPerson);
+            System.out.println(personToUpdate);
+
+
         }
         emf.close();
     }
